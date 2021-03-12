@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <title>plotmap</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js" integrity="sha512-7oYXeK0OxTFxndh0erL8FsjGvrl2VMDor6fVqzlLGfwOQQqTbYsGPv4ZZ15QHfSk80doyaM0ZJdvkyDcVO7KFA==" crossorigin="anonymous"></script>
+
+    <script src="https://kit.fontawesome.com/b6b808bbca.js" crossorigin="anonymous"></script>
+
+    
+    
+    <script>
+      $(function () {
+        $.fn.datepicker.dates['de'] = {
+          days: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
+          daysShort: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+          daysMin: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+          months: ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
+          monthsShort: ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"],
+          today: "Heute",
+          clear: "Löschen",
+          format: "dd.mm.yyyy",
+          titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
+          weekStart: 1
+        };
+
+        $('.date').datepicker({
+          maxViewMode: 2,
+          todayBtn: "linked",
+          clearBtn: true,
+          language: "de",
+          format: 'dd.mm.yyyy',
+          calendarWeeks: true,
+          todayHighlight: true,
+          autoclose: true,
+          orientation: "bottom",
+          templates: {leftArrow: '<i class="fas fa-long-arrow-alt-left"></i>', rightArrow: '<i class="fas fa-long-arrow-alt-right"></i>'}
+        });
+      });
+    
+    </script>
+    <style>
+      .today {text-align: center;}
+      .clear {text-align: center;}
+      .cw {font-size:x-small;font-weight: bold;}
+      .dow {font-size:x-small;font-weight: bold;text-align: center;}
+      .datepicker-switch {text-align: center;}
+      .next {text-align: right;}
+      .day {text-align: center;}
+      .old {font-style: italic;}
+      .new {font-style: italic;}
+      .animate-show-hide.ng-hide-add,.animate-show-hide.ng-hide-remove {transition: all linear 0.5s;}
+    </style>
+    
+    <script src="./MapBBCodeLoader.js"></script>
+    <script src="./luxon.min.js"></script>
+    <script src="./app.js"></script>
+  </head>
+
+  <body ng-app="PlotMap" ng-controller="PlotController as bVEList">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="page-header col-md-9">
+          <i class="fas fa-calendar-alt" style="color:#767171; font-size: 4em;""></i>
+          <i class="fas fa-map-marked-alt" style="color:#FF0000; font-size: 4em;""></i><b>&nbsp;</b>
+          <i class="fas fa-terminal" style="font-size: 4em;"></i><b>&nbsp;</b>
+          
+          
+          <b style="color:#767171; font-size: 4em;">plot</b>
+          <b style="color:#FF0000; font-size: 4em;"">map</b>
+          
+          <h3 class="animate-show-hide ng-show" ng-show="bVEList.loadComplete">Baustellenübersicht für den {{bVEList.selecteDate}}</h3>
+          <h3 class="ng-hide animate-show-hide" ng-hide="bVEList.loadComplete">Baumaßnahmen einlesen</h3>
+          
+        </div>
+
+        <div class="page-header col-md-1">          
+          <img src="./img/logo.jpg" class="img-fluid" alt="plotmap logo">          
+        </div>
+        <div class="page-header col-md-2">
+          <img src="./img/Db-netze.png" class="img-fluid" alt="DB Netz AG Logo">         
+        </div>
+
+        <div class="col-md-9 ng-hide animate-show-hide" ng-hide="bVEList.loadComplete">
+          <div class="form-group">
+
+            
+            <div class="col-md-6">
+              
+              <input type="file" id="list" class="form-control" ng-model="bVEList.Filename" accept=".json" placeholder="Liste auswählen"> <p></p>
+              <p><b>Achtung</b> Es werden keinerlei Daten ins Netz hochgeladen. Der Verarbeitung der Daten und Erzeugung der Kartendarstellung erfolgt ausschließlich auf dem lokalen Rechner.</p>
+
+              <button type="button" class="btn btn-secondary" ng-click="maList.readAndConvertFile();">
+                <i class="fas fa-map"></i>
+                Daten einlesen und Karte anzeigen
+              </button>
+            </div>         
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+
+        <div class="col-md-12 animate-show-hide ng-show" ng-show="bVEList.loadComplete">
+            <div class="col-md-4">
+              <table>
+                <tr>
+                  <td>
+                    <div class="form-inline date">
+                      <input type="text" id="selectDate" class="form-control" ng-model="bVEList.selecteDate">
+                      <div class="input-group-addon"></div>
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      <button type="button" class="btn btn-outline-secondary" ng-click="bVEList.filterAndShowbVE();">
+                        <i class="fas fa-search-location"></i>
+                        Baustellen filtern
+                      </button>  
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+          <div class = "row">
+            <div class="col-md-12">
+              <div class="mapbbcode" id="railmap"> </div>
+              <div>{{bVEList.mapString}}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <p></p>
+          <p><i class="fas fa-code"></i> <b>DB Netz AG</b> | Fahrplan und Kapazitätsmanagement | Region Mitte | I.NB-MI-F | 2021</p>
+        </div>
+
+      </div>
+    </div>
+  </body>
