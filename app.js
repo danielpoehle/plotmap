@@ -77,7 +77,7 @@
             }else{
                 pin += '<p>Abschnitt: ' + bVE.BTS[0].name.replace(')', "\\)") + ' - ' + bVE.BTS[1].name.replace(')', "\\)") + '</p>';
             }
-            pin += '<ul><li>' + bVE.KAT + '-Maßnahme' + '</li><li>Beginn ' + bVE.G_START + '</li>';
+            pin += '<ul><li>DS100: ' + bVE.BTS[0].ds100 + '</li><li>' + bVE.KAT + '-Maßnahme' + '</li><li>Beginn ' + bVE.G_START + '</li>';
             pin += '<li>Ende ' + bVE.G_END + '</li></ul>) ';
             return pin;
         };
