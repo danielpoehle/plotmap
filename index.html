@@ -15,6 +15,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js" integrity="sha512-7oYXeK0OxTFxndh0erL8FsjGvrl2VMDor6fVqzlLGfwOQQqTbYsGPv4ZZ15QHfSk80doyaM0ZJdvkyDcVO7KFA==" crossorigin="anonymous"></script>
 
     <script src="https://kit.fontawesome.com/b6b808bbca.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js" integrity="sha512-ovjLI1ZcZe6bw+ImQ21r+sv8q/Vwob2kq7tFidK6E1LWfi0T4uobbmpfEU1//a9h9o5Kkt+MnMWf6rWlg0EiMw==" crossorigin="anonymous"></script>
 
     
     
@@ -114,23 +115,22 @@
             <div class="col-md-11">
               <table>
                 <tr>
+                  <td><b>Auswahl Datum</b></td>
+                  <td>&nbsp;</td>
+                  <td><b>Auswahl Regionen</b></td>
+                  <td>&nbsp;</td>
+                  <td><b>Auswahl Maßnahmen</b></td>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
                   <td>
                     <div class="form-inline date">
                       <input type="text" id="selectDate" class="form-control" ng-model="bVEList.selecteDate">
                       <div class="input-group-addon"></div>
                     </div>
-                  </td>
-                  <td>
-                    <div>
-                      <button type="button" class="btn btn-outline-secondary" ng-click="bVEList.filterAndShowbVE();">
-                        <i class="fas fa-search-location"></i>
-                        Baustellen filtern
-                      </button>  
-                    </div>
-                  </td>
-                  <td>
-                    <div><b>Auswahl Regionen</b></div>
-                    
+                  </td> 
+                  <td>&nbsp;</td>                 
+                  <td>                    
                       <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" id="NORD" ng-model="bVEList.nord">
                         <label class="form-check-label" for="NORD">Nord</label>
@@ -160,6 +160,33 @@
                         <label class="form-check-label" for="SÜD">Süd</label>
                       </div>
                    </td>
+                   <td>&nbsp;</td>
+                   <td>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" id="A" ng-model="bVEList.A">
+                      <label class="form-check-label" for="A">A</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" id="B" ng-model="bVEList.B">
+                      <label class="form-check-label" for="B">B</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" id="C" ng-model="bVEList.C">
+                      <label class="form-check-label" for="C">C</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" id="F" ng-model="bVEList.F">
+                      <label class="form-check-label" for="F">F</label>
+                    </div>
+                   </td>
+                   <td>
+                    <div>
+                      <button type="button" class="btn btn-secondary" ng-click="bVEList.filterAndShowbVE();">
+                        <i class="fas fa-search-location"></i>
+                        Baustellen filtern
+                      </button>  
+                    </div>
+                  </td>
                 </tr>
               </table>
             </div>
@@ -167,7 +194,15 @@
           <div class = "row">
             <div class="col-md-12">
               <div class="mapbbcode" id="railmap"> </div>
-              <div>{{bVEList.mapString}}</div>
+            </div>
+          </div>
+          <div class = "row">
+            <div class="col-md-3">
+              <button type="button" class="btn btn-secondary" ng-click="bVEList.addToList();">
+                <i class="far fa-plus-square"></i>
+                <i class="fas fa-map-marker-alt"></i>
+                bVE hinzufügen
+              </button>  
             </div>
           </div>
         </div>
