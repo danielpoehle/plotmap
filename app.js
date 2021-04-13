@@ -13,6 +13,7 @@
         bVEList.Filename = '';
         bVEList.selecteDate = new Date().toLocaleDateString('de-DE', options);
         bVEList.bVE = [];
+        bVEList.selectedbVE = [];
         bVEList.visual = [];
         bVEList.loadComplete = false;
         bVEList.mapString = '';
@@ -27,6 +28,7 @@
         bVEList.B = true;
         bVEList.C = false;
         bVEList.F = true;
+        bVEList.showSelbVETable = false;
         
         $(document).ready(function () {
             $('#list').bind('change', handleDialog);
@@ -46,11 +48,25 @@
         };
         
         bVEList.addToList = function(){
-            const id = $('#add').attr('value');
-            console.log(id);
+            const id = $('#add').attr('value');            
+            const selbVE = bVEList.bVE.filter((b) => b.BVEID === id);
+            //console.log(selbVE);
+            const ds100 = selbVE[0].BTS[0].ds100
+            if(bVEList.selectedbVE.findIndex((s) => s.ds100 === ds100) === -1){
+                bVEList.selectedbVE.push({ds100: ds100, bveList: [selbVE[0]], name: selbVE[0].BTS[0].name});
+            }else{
+
+                if(!bVEList.selectedbVE.find((s) => s.ds100 === ds100).bveList.map((m) => m.BVEID).includes(id)){
+                    bVEList.selectedbVE.find((s) => s.ds100 === ds100).bveList.push(selbVE[0]);
+                }                
+            }
+            if(bVEList.selectedbVE.length > 0){bVEList.showSelbVETable = true;}
+            console.log(bVEList.selectedbVE);
         };
 
-        bVEList.filterAndShowbVE = function(){            
+        bVEList.filterAndShowbVE = function(){  
+            bVEList.showSelbVETable = false;
+            bVEList.selectedbVE = [];                      
             let region = [];
             if(bVEList.nord) {region.push("NORD");}
             if(bVEList.ost) {region.push("OST");}

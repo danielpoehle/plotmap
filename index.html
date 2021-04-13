@@ -205,6 +205,53 @@
               </button>  
             </div>
           </div>
+          <div class="row animate-show-hide ng-show" ng-show="bVEList.showSelbVETable">
+            <div class="col-md-12">
+              <hr>
+              Die folgenden Baustellen wurden ausgewählt.
+              <table class="table table-hover table-sm">
+                <tr ng-repeat="b in bVEList.selectedbVE">                  
+                    <td class="table-warning"><div>{{b.ds100}}</div><div>{{b.name}}</div></td>
+                    <td>
+                      <table class="table table-hover table-sm table-borderless ">
+                        <tr ng-repeat="d in b.bveList">
+                          <td>
+                            <div>BBMN-ID: {{d.BBMNID}}</div>
+                            <div>{{d.KAT}}-Maßnahme</div>
+                          </td>
+                          <td>
+                            <div><span>{{d.BTS[0].ds100}}</span><span ng-show="d.BTS[1]">- {{d.BTS[1].ds100}}</span></div>
+                            <div>Strecke {{d.LINE}}</div>
+                          </td>
+                          <td>
+                            <div>von {{d.G_START}}</div>
+                            <div><span ng-show="d.NONSTOP==='Ja'">durchgehend</span> bis {{d.G_END}}</div>
+                            <div>VTS: {{d.VTS}}</div>
+                          </td>
+                          <td>
+                            <div>{{d.WORK}}</div>
+                            <div>{{d.LIMITATION}}</div>
+                            <div>{{d.RULE}}</div>
+                          </td>
+                          <td>
+                            <div>Züge betroffen 
+                              <span ng-show="d.AFFECT_TRAINS==='Ja'"><i class="far fa-check-square"></i></span> 
+                              <span ng-hide="d.AFFECT_TRAINS==='Ja'"><i class="far fa-square"></i></span> 
+                            </div>
+                            <div>SE betroffen 
+                              <span ng-show="d.AFFECT_SE==='Ja'"><i class="far fa-check-square"></i></span> 
+                              <span ng-hide="d.AFFECT_SE==='Ja'"><i class="far fa-square"></i></span>
+                            </div>
+                            <div data-toggle="tooltip" data-placement="top" title="{{d.NOTE}}">Notizen <i class="fas fa-info-circle"></i></div>
+                          </td>
+                        </tr>
+                      </table>                      
+                    </td>  
+                </tr>
+              </table>
+            </div>
+          </div>
+
         </div>
 
         <div class="col-md-12">
