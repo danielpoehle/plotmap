@@ -44,7 +44,7 @@
             reader.onload = function (event) {
                 bVEList.bVE = JSON.parse(event.target.result);
                 bVEList.loadComplete = true;
-                console.log(bVEList.bVE[0]);
+                //console.log(bVEList.bVE[0]);
             };
         };
         
@@ -62,7 +62,7 @@
                 }                
             }
             if(bVEList.selectedbVE.length > 0){bVEList.showSelbVETable = true;}
-            console.log(bVEList.selectedbVE);
+            //console.log(bVEList.selectedbVE);
         };
 
         bVEList.filterAndShowbVE = function(){  
@@ -110,7 +110,7 @@
                 pin += '<p>Abschnitt: ' + bVE.BTS[0].name.replace(')', "\\)") + ' - ' + bVE.BTS[1].name.replace(')', "\\)") + '</p>';
             }
             pin += '<ul id="add" value=' + bVE.BVEID + '><li>DS100: ' + bVE.BTS[0].ds100 + '</li><li>' + bVE.KAT + '-Maßnahme' + '</li><li>Beginn ' + bVE.G_START + '</li>';
-            pin += '<li>Ende ' + bVE.G_END + '</li></ul> ';
+            pin += '<li>Ende ' + bVE.G_END + '</li><li> ' + bVE.LIMITATION + '</li><li>' + bVE.RULE + '</li></ul> ';
             pin += '<p data-toggle="tooltip" data-placement="top" title="'+ bVE.NOTE.replaceAll(')', "\\)") + '">Notizen <i class="fas fa-info-circle"></i></p>) ';
             return pin;
         };
@@ -122,12 +122,12 @@
             const endDay = DateTime.fromFormat(toDate, 'dd.MM.yyyy').plus({ days: 1 }).minus({seconds: 1});
             const selectedDayInterval = Interval.fromDateTimes(beginDay, endDay);
             const filteredbVEList = bVEList.filter((b) => regionen.includes(b.REGION) && selectedDayInterval.overlaps(
-                Interval.fromDateTimes(DateTime.fromMillis(b.START), DateTime.fromMillis(b.END))) && massnahmen.includes(b.KAT));
+                Interval.fromDateTimes(DateTime.fromMillis(b.START), DateTime.fromMillis(b.END))) && massnahmen.includes(b.KAT) && checkWeekdays(b.VTS, selectedDayInterval));
 
             let allStations = filteredbVEList.map((f) => f.BTS[0].ds100);
             allStations = allStations.filter((item, index) => allStations.indexOf(item)===index);
 
-            console.log(filteredbVEList.length);
+            //console.log(filteredbVEList.length);
 
             let pinString = '[map] ';
 
@@ -140,6 +140,9 @@
                     let radius = 0.0002;
                     if(bveBf.length > 4){radius = 0.0003;}
                     for (let j = 0; j < bveBf.length; j += 1) {
+                        if(bveBf[j].BBMNID === '223BAEBBDF3B1'){
+                            checkWeekdays(bveBf[j].VTS, selectedDayInterval);
+                        }
                         pinString += service.createPin(parseFloat(bveBf[j].BTS[0].lat) + radius * Math.sin(j*alphaStp), 
                                                        parseFloat(bveBf[j].BTS[0].lon) + radius * Math.cos(j*alphaStp), 
                                                        bveBf[j]);                        
@@ -151,4 +154,40 @@
             return pinString;
         };
     }
+
+    function checkWeekdays(vts, span){
+        //Mo is 64, Di is 32, Mi is 16, ..., So is 1
+
+        if(span.length('days')>6){return true;}
+        if(vts===12700){return true;}
+
+        let vtObj = [
+            {"Nr" : 1, "Day": "Mo", "Interval" : false, "BVE": false},
+            {"Nr" : 2, "Day": "Di", "Interval" : false, "BVE": false},
+            {"Nr" : 3, "Day": "Mi", "Interval" : false, "BVE": false},
+            {"Nr" : 4, "Day": "Do", "Interval" : false, "BVE": false},
+            {"Nr" : 5, "Day": "Fr", "Interval" : false, "BVE": false},
+            {"Nr" : 6, "Day": "Sa", "Interval" : false, "BVE": false},
+            {"Nr" : 7, "Day": "So", "Interval" : false, "BVE": false}
+        ];
+
+        const vt = [64,32,16,8,4,2,1];
+        let vtday = vts/100;
+        for (let index = 0; index < vt.length; index+=1) {
+            if((vtday)-vt[index]>=0){                
+                vtday-= vt[index];
+                vtObj[vtObj.findIndex((v) => v.Nr === (index+1))].BVE = true;
+            }            
+        }
+        
+        const nr = span.start.weekday;
+        let ar = Array.from(new Array(Math.ceil(span.length('days'))),(val,index)=> (index+nr));
+        for (let index = 0; index < ar.length; index += 1) {
+            if(ar[index]> 7){ar[index]-= 7;}
+            vtObj[vtObj.findIndex((v) => v.Nr === ar[index])].Interval = true;
+        }
+
+
+        return(vtObj.filter((v)=> v.Interval===true).some((v)=>v.BVE));      
+    };
 })();
