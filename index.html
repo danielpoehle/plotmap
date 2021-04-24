@@ -60,6 +60,8 @@
       .old {font-style: italic;}
       .new {font-style: italic;}
       .animate-show-hide.ng-hide-add,.animate-show-hide.ng-hide-remove {transition: all linear 0.5s;}
+      .ww {min-width: 350px;}
+      .wm {min-width: 250px;}
     </style>
     
     <script src="./MapBBCodeLoader.js"></script>
@@ -227,7 +229,7 @@
                       <table class="table table-hover table-sm table-borderless ">
                         <tr ng-repeat="d in b.bveList">
                           <td>
-                            <div>BBMN-ID: {{d.BBMNID}}</div>
+                            <div class="wm">BBMN-ID: {{d.BBMNID}}</div>
                             <div>{{d.KAT}}-Maßnahme</div>
                           </td>
                           <td>
@@ -235,14 +237,18 @@
                             <div>Strecke {{d.LINE}}</div>
                           </td>
                           <td>
-                            <div>von {{d.G_START}}</div>
-                            <div><span ng-show="d.NONSTOP==='Ja'">durchgehend</span> bis {{d.G_END}}</div>
-                            <div>VTS: {{d.VTS}}</div>
+                            <span>
+                              <div>von {{d.G_START}}</div>
+                              <div class="ww"><span ng-show="d.NONSTOP==='Ja'">durchgehend</span> bis {{d.G_END}}</div>
+                              <div>VTS: {{d.VTS}}</div>
+                            </span>                            
                           </td>
                           <td>
-                            <div>{{d.WORK}}</div>
-                            <div>{{d.LIMITATION}}</div>
-                            <div>{{d.RULE}}</div>
+                            <span>
+                              <div>{{d.WORK}}</div>
+                              <div class="ww">{{d.LIMITATION}}</div>
+                              <div>{{d.RULE}}</div>
+                            </span>                            
                           </td>
                           <td>
                             <div>Züge betroffen 

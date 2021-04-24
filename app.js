@@ -44,7 +44,7 @@
             reader.onload = function (event) {
                 bVEList.bVE = JSON.parse(event.target.result);
                 bVEList.loadComplete = true;
-                //console.log(bVEList.bVE[0]);
+                console.log(bVEList.bVE.find((b)=> b.VTS === "12000" && b.REGION === "MITTE"));
             };
         };
         
@@ -86,7 +86,7 @@
                 windowPath: './mapbbcode/',
                 layers: 'RailwayMap',
                 defaultPosition: [22, 11],
-                viewWidth: 1280,
+                viewWidth: 1500,
                 viewHeight: 600,
                 fullViewHeight: 600,
                 allowedHTML: 'span|i|h6|br|input|li|ul|p|button',
@@ -140,8 +140,9 @@
                     let radius = 0.0002;
                     if(bveBf.length > 4){radius = 0.0003;}
                     for (let j = 0; j < bveBf.length; j += 1) {
-                        if(bveBf[j].BBMNID === '223BAEBBDF3B1'){
-                            checkWeekdays(bveBf[j].VTS, selectedDayInterval);
+                        if(bveBf[j].BBMNID === "22A8F8B85B68B"){
+                            console.log(bveBf[j].G_START + " " + bveBf[j].G_END + " " + bveBf[j].NONSTOP);
+                            console.log(calculateDuration(bveBf[j].START, bveBf[j].END, bveBf[j].VTS, bveBf[j].NONSTOP==='Ja')); 
                         }
                         pinString += service.createPin(parseFloat(bveBf[j].BTS[0].lat) + radius * Math.sin(j*alphaStp), 
                                                        parseFloat(bveBf[j].BTS[0].lon) + radius * Math.cos(j*alphaStp), 
@@ -162,13 +163,13 @@
         if(vts===12700){return true;}
 
         let vtObj = [
-            {"Nr" : 1, "Day": "Mo", "Interval" : false, "BVE": false},
-            {"Nr" : 2, "Day": "Di", "Interval" : false, "BVE": false},
-            {"Nr" : 3, "Day": "Mi", "Interval" : false, "BVE": false},
-            {"Nr" : 4, "Day": "Do", "Interval" : false, "BVE": false},
-            {"Nr" : 5, "Day": "Fr", "Interval" : false, "BVE": false},
-            {"Nr" : 6, "Day": "Sa", "Interval" : false, "BVE": false},
-            {"Nr" : 7, "Day": "So", "Interval" : false, "BVE": false}
+            {"Nr" : 0, "Day": "Mo", "Interval" : false, "BVE": false},
+            {"Nr" : 1, "Day": "Di", "Interval" : false, "BVE": false},
+            {"Nr" : 2, "Day": "Mi", "Interval" : false, "BVE": false},
+            {"Nr" : 3, "Day": "Do", "Interval" : false, "BVE": false},
+            {"Nr" : 4, "Day": "Fr", "Interval" : false, "BVE": false},
+            {"Nr" : 5, "Day": "Sa", "Interval" : false, "BVE": false},
+            {"Nr" : 6, "Day": "So", "Interval" : false, "BVE": false}
         ];
 
         const vt = [64,32,16,8,4,2,1];
@@ -176,18 +177,26 @@
         for (let index = 0; index < vt.length; index+=1) {
             if((vtday)-vt[index]>=0){                
                 vtday-= vt[index];
-                vtObj[vtObj.findIndex((v) => v.Nr === (index+1))].BVE = true;
+                vtObj[vtObj.findIndex((v) => v.Nr === (index))].BVE = true;
             }            
         }
         
-        const nr = span.start.weekday;
+        const nr = span.start.weekday-1;
         let ar = Array.from(new Array(Math.ceil(span.length('days'))),(val,index)=> (index+nr));
         for (let index = 0; index < ar.length; index += 1) {
-            if(ar[index]> 7){ar[index]-= 7;}
+            if(ar[index]>= 7){ar[index]-= 7;}
             vtObj[vtObj.findIndex((v) => v.Nr === ar[index])].Interval = true;
         }
 
 
         return(vtObj.filter((v)=> v.Interval===true).some((v)=>v.BVE));      
+    };
+
+    function calculateDuration(start, end, vts, nonstop){
+        const DateTime = luxon.DateTime;
+        const Interval = luxon.Interval;
+        if(vts === 127000 || nonstop){return(Interval.fromDateTimes(DateTime.fromMillis(start), DateTime.fromMillis(end)).length('hours').toFixed(2));}
+        const dur = Interval.fromDateTimes(DateTime.fromMillis(start), DateTime.fromMillis(end)).length('days');
+        return((24*(dur - Math.floor(dur))).toFixed(2));
     };
 })();
