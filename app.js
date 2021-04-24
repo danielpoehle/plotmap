@@ -12,6 +12,7 @@
         
         bVEList.Filename = '';
         bVEList.selecteDate = new Date().toLocaleDateString('de-DE', options);
+        bVEList.toDate = bVEList.selecteDate;
         bVEList.bVE = [];
         bVEList.selectedbVE = [];
         bVEList.visual = [];
@@ -80,7 +81,7 @@
             if(bVEList.B){mn.push("B");}
             if(bVEList.C){mn.push("C");}
             if(bVEList.F){mn.push("F");}
-            bVEList.mapString = PlotService.generateMapString(bVEList.selecteDate, bVEList.bVE, region, mn);
+            bVEList.mapString = PlotService.generateMapString(bVEList.selecteDate, bVEList.toDate, bVEList.bVE, region, mn);
             var mapBBcode = new MapBBCode({
                 windowPath: './mapbbcode/',
                 layers: 'RailwayMap',
@@ -114,17 +115,19 @@
             return pin;
         };
 
-        service.generateMapString = function(selectedDate, bVEList, regionen, massnahmen){
+        service.generateMapString = function(selectedDate, toDate, bVEList, regionen, massnahmen){
             const DateTime = luxon.DateTime;
             const Interval = luxon.Interval;
             const beginDay = DateTime.fromFormat(selectedDate, 'dd.MM.yyyy');
-            const endDay = beginDay.plus({ days: 1 }).minus({seconds: 1});
+            const endDay = DateTime.fromFormat(toDate, 'dd.MM.yyyy').plus({ days: 1 }).minus({seconds: 1});
             const selectedDayInterval = Interval.fromDateTimes(beginDay, endDay);
             const filteredbVEList = bVEList.filter((b) => regionen.includes(b.REGION) && selectedDayInterval.overlaps(
                 Interval.fromDateTimes(DateTime.fromMillis(b.START), DateTime.fromMillis(b.END))) && massnahmen.includes(b.KAT));
 
             let allStations = filteredbVEList.map((f) => f.BTS[0].ds100);
             allStations = allStations.filter((item, index) => allStations.indexOf(item)===index);
+
+            console.log(filteredbVEList.length);
 
             let pinString = '[map] ';
 

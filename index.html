@@ -34,7 +34,7 @@
           weekStart: 1
         };
 
-        $('.date').datepicker({
+        $('.input-daterange').datepicker({
           maxViewMode: 2,
           todayBtn: "linked",
           clearBtn: true,
@@ -79,7 +79,9 @@
           <b style="color:#767171; font-size: 4em;">plot</b>
           <b style="color:#FF0000; font-size: 4em;"">map</b>
           
-          <h3 class="animate-show-hide ng-show" ng-show="bVEList.loadComplete">Baustellenübersicht für den {{bVEList.selecteDate}}</h3>
+          <h3 class="animate-show-hide ng-show" ng-show="bVEList.loadComplete">
+            Baustellenübersicht für den {{bVEList.selecteDate}} <span ng-show="bVEList.selecteDate!==bVEList.toDate">- {{bVEList.toDate}}</span>
+          </h3>
           <h3 class="ng-hide animate-show-hide" ng-hide="bVEList.loadComplete">Baumaßnahmen einlesen</h3>
           
         </div>
@@ -115,7 +117,7 @@
             <div class="col-md-11">
               <table>
                 <tr>
-                  <td><b>Auswahl Datum</b></td>
+                  <td><b>Auswahl Zeitraum</b></td>
                   <td>&nbsp;</td>
                   <td><b>Auswahl Regionen</b></td>
                   <td>&nbsp;</td>
@@ -124,10 +126,11 @@
                 </tr>
                 <tr>
                   <td>
-                    <div class="form-inline date">
+                    <div class="input-group input-daterange">
                       <input type="text" id="selectDate" class="form-control" ng-model="bVEList.selecteDate">
-                      <div class="input-group-addon"></div>
-                    </div>
+                      <div class="input-group-addon">&nbsp;&nbsp;<i class="fas fa-window-minimize"></i>&nbsp;&nbsp;</div>
+                      <input type="text" id="toDate" class="form-control" ng-model="bVEList.toDate">
+                    </div>                    
                   </td> 
                   <td>&nbsp;</td>                 
                   <td>                    
@@ -179,14 +182,22 @@
                       <label class="form-check-label" for="F">F</label>
                     </div>
                    </td>
-                   <td>
+                   <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td>
                     <div>
-                      <button type="button" class="btn btn-secondary" ng-click="bVEList.filterAndShowbVE();">
+                      <button type="button" class="btn btn-secondary col-12" ng-click="bVEList.filterAndShowbVE();">
                         <i class="fas fa-search-location"></i>
                         Baustellen filtern
                       </button>  
                     </div>
                   </td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
                 </tr>
               </table>
             </div>
