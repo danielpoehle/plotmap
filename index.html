@@ -229,6 +229,7 @@
                       <table class="table table-hover table-sm table-borderless ">
                         <tr ng-repeat="d in b.bveList">
                           <td>
+                            <div class="wm">BOB-Vorgangsnummer: {{d.BOB}}</div>
                             <div class="wm">BBMN-ID: {{d.BBMNID}}</div>
                             <div>{{d.KAT}}-Maßnahme</div>
                           </td>
@@ -244,7 +245,16 @@
                                 <span ng-hide="d.SCHICHT==='Ja'">durchgehend</span>
                                 bis {{d.G_END}}
                               </div>
-                              <div>VTS: {{d.VTS}}</div>
+                              <div ng-show="d.VTS !== '12700'">  
+                                <span>Mo <span ng-show="d.weekdays[0]"><i class="far fa-check-square"></i></span><span ng-hide="d.weekdays[0]"><i class="far fa-square"></i></span></span>
+                                <span>Di <span ng-show="d.weekdays[1]"><i class="far fa-check-square"></i></span><span ng-hide="d.weekdays[1]"><i class="far fa-square"></i></span></span>
+                                <span>Mi <span ng-show="d.weekdays[2]"><i class="far fa-check-square"></i></span><span ng-hide="d.weekdays[2]"><i class="far fa-square"></i></span></span>
+                                <span>Do <span ng-show="d.weekdays[3]"><i class="far fa-check-square"></i></span><span ng-hide="d.weekdays[3]"><i class="far fa-square"></i></span></span>
+                                <span>Fr <span ng-show="d.weekdays[4]"><i class="far fa-check-square"></i></span><span ng-hide="d.weekdays[4]"><i class="far fa-square"></i></span></span>
+                                <span>Sa <span ng-show="d.weekdays[5]"><i class="far fa-check-square"></i></span><span ng-hide="d.weekdays[5]"><i class="far fa-square"></i></span></span>
+                                <span>So <span ng-show="d.weekdays[6]"><i class="far fa-check-square"></i></span><span ng-hide="d.weekdays[6]"><i class="far fa-square"></i></span></span>
+                              </div>
+                              <div ng-show="d.VTS === '12700'">täglich</div>
                             </span>                            
                           </td>
                           <td>

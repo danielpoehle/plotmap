@@ -44,7 +44,11 @@
             reader.onload = function (event) {
                 bVEList.bVE = JSON.parse(event.target.result);
                 bVEList.loadComplete = true;
+                for( let j = 0; j < bVEList.bVE.length; j+= 1 ) {
+                    bVEList.bVE[j].weekdays = transformVTStoWeekdays(bVEList.bVE[j].VTS);                    
+                }
                 console.log(bVEList.bVE.find((b)=> b.VTS === "12000" && b.REGION === "MITTE"));
+                // console.log(bVEList.bVE[0]);
             };
         };
         
@@ -104,6 +108,7 @@
         service.createPin = function(lat, lon, bVE){
             //53.5136232,8.0525981(<h6>Mariensiel</h6>)
             let pin = lat + ',' + lon + '(<h6>' + bVE.WORK + '</h6>';
+            pin += '<p>BOB-Vorgangsnummer ' + bVE.BOB + '</p>';
             if(bVE.BTS.length === 1){
                 pin += '<p>Bahnhof: ' + bVE.BTS[0].name.replaceAll(')', "\\)") + '</p>';
             }else{
@@ -190,6 +195,19 @@
 
 
         return(vtObj.filter((v)=> v.Interval===true).some((v)=>v.BVE));      
+    };
+
+    function transformVTStoWeekdays(vts){
+        let weekdays = [false,false,false,false,false,false,false]
+        const vt = [64,32,16,8,4,2,1];
+        let vtday = vts/100;
+        for (let index = 0; index < vt.length; index+=1) {
+            if((vtday)-vt[index]>=0){                
+                vtday-= vt[index];
+                weekdays[index] = true;   
+            }            
+        }
+        return weekdays;
     };
 
     function calculateDuration(start, end, vts, nonstop){
