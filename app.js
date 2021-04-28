@@ -105,12 +105,12 @@
             //53.5136232,8.0525981(<h6>Mariensiel</h6>)
             let pin = lat + ',' + lon + '(<h6>' + bVE.WORK + '</h6>';
             if(bVE.BTS.length === 1){
-                pin += '<p>Bahnhof: ' + bVE.BTS[0].name.replace(')', "\\)") + '</p>';
+                pin += '<p>Bahnhof: ' + bVE.BTS[0].name.replaceAll(')', "\\)") + '</p>';
             }else{
-                pin += '<p>Abschnitt: ' + bVE.BTS[0].name.replace(')', "\\)") + ' - ' + bVE.BTS[1].name.replace(')', "\\)") + '</p>';
+                pin += '<p>Abschnitt: ' + bVE.BTS[0].name.replaceAll(')', "\\)") + ' - ' + bVE.BTS[1].name.replaceAll(')', "\\)") + '</p>';
             }
             pin += '<ul id="add" value=' + bVE.BVEID + '><li>DS100: ' + bVE.BTS[0].ds100 + '</li><li>' + bVE.KAT + '-Maßnahme' + '</li><li>Beginn ' + bVE.G_START + '</li>';
-            pin += '<li>Ende ' + bVE.G_END + '</li><li> ' + bVE.LIMITATION + '</li><li>' + bVE.RULE + '</li></ul> ';
+            pin += '<li>Ende ' + bVE.G_END + '</li><li>Schichtweise ' + bVE.SCHICHT + '</li><li> ' + bVE.LIMITATION + '</li><li>' + bVE.RULE + '</li></ul> ';
             pin += '<p data-toggle="tooltip" data-placement="top" title="'+ bVE.NOTE.replaceAll(')', "\\)") + '">Notizen <i class="fas fa-info-circle"></i></p>) ';
             return pin;
         };

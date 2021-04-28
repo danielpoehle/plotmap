@@ -239,7 +239,11 @@
                           <td>
                             <span>
                               <div>von {{d.G_START}}</div>
-                              <div class="ww"><span ng-show="d.NONSTOP==='Ja'">durchgehend</span> bis {{d.G_END}}</div>
+                              <div class="ww">
+                                <span ng-show="d.SCHICHT==='Ja'">schichtweise</span> 
+                                <span ng-hide="d.SCHICHT==='Ja'">durchgehend</span>
+                                bis {{d.G_END}}
+                              </div>
                               <div>VTS: {{d.VTS}}</div>
                             </span>                            
                           </td>
